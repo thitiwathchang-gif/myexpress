@@ -7,9 +7,17 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@line/bot-sdk": "^11.0.0",
     "express": "^5.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thitiwathchang-gif/myexpress.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thitiwathchang-gif/myexpress/issues"
+  },
+  "homepage": "https://github.com/thitiwathchang-gif/myexpress#readme",
+  "description": ""
 }

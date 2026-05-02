@@ -1,37 +1,66 @@
-const express = require('express');
-const line = require('@line/bot-sdk');
+import * as line from '@line/bot-sdk'
+import express from 'express'
 
-const app = express();
-
-// ตั้งค่าจาก LINE Developers Console
+// create LINE SDK config from env variables
 const config = {
-  channelAccessToken: 'EQv3qOTOqCtVj0M+cvOhMQZJacduUBUtObYE0gfAhtxxdAgCR9j7zjw8k5erzYWIuEfCxcYS5+/2u1HMkq4XvmkDaldmp9DrGUjd80YvtJ5g48FIzK5DZcyrCaSBY3O0N6Ugh7sZALRwfeDFKjJ2NgdB04t89/1O/w1cDnyilFU=',
-  channelSecret: '5e3c2db944de70126eac6d678157826d'
+  channelSecret: "b6af05c16e146c4464736d13ffc81d3f",
 };
 
-app.use('/webhook', line.middleware(config));
-
-// รับ webhook
-app.post('/webhook', (req, res) => {
-  Promise
-    .all(req.body.events.map(handleEvent))
-    .then(result => res.json(result));
+// create LINE SDK client
+const client = line.LineBotClient.fromChannelAccessToken({
+  channelAccessToken: "e7/PSfogR8BY0uRLXMj4BQDK1eTNIC3dUnzdT9IdpTsRJn0wuFg46iN2/Ks0jdciuEfCxcYS5+/2u1HMkq4XvmkDaldmp9DrGUjd80YvtJ5zCpFaEG5ejzT9z9nbYd32HBcpvTm3A07nS+XijKVCcwdB04t89/1O/w1cDnyilFU=",
 });
 
-// ตอบกลับข้อความ
+// create Express app
+// about Express itself: https://expressjs.com/
+const app = express();
+
+// register a webhook handler with middleware
+// about the middleware, please refer to doc
+app.post('/callback', line.middleware(config), (req, res) => {
+  Promise
+    .all(req.body.events.map(handleEvent))
+    .then((result) => res.json(result))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).end();
+    });
+});
+
+// event handler
 function handleEvent(event) {
   if (event.type !== 'message' || event.message.type !== 'text') {
     return Promise.resolve(null);
   }
 
-  return client.replyMessage(event.replyToken, {
+  const replyMessage = {
     type: 'text',
-    text: `คุณพิมพ์ว่า: ${event.message.text}`
+    text: `คุณพูดว่า "${event.message.text}"`
+  };
+
+  return client.replyMessage({
+    replyToken: event.replyToken,
+    messages: [replyMessage],
   });
 }
-
-const client = new line.Client(config);
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// listen on port
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`listening on ${port}`);
 });
+
+app.get('/callback', function (req, res) {
+    res.send('Hello World!')
+})
+// Respond to POST request on the root route (/), the application’s home page:
+app.post('/callback', function (req, res) {
+    res.send('Got a POST request')
+})
+// Respond to a PUT request to the /user route:
+app.put('/user', function (req, res) {
+    res.send('Got a PUT request at /user')
+})
+// Respond to a DELETE request to the /user route:
+app.delete('/user', function (req, res) {
+    res.send('Got a DELETE request at /user')
+})
