@@ -19,7 +19,7 @@ const app = express();
 
 // setup a route for basic check
 app.get('/', function (req, res) {
-    res.send('Hello World!, Thitiwath')
+    res.send('Hello World!, Thitiwath Changcheen')
 });
 
 // register a webhook handler with middleware
