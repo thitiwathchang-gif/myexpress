@@ -44,9 +44,9 @@ function handleEvent(event) {
   });
 }
 // listen on port
-const PORT = process.env.PORT || 3099;
-app.listen(port, () => {
-  console.log(`listening on ${port}`);
+const PORT = process.env.PORT || 3016;
+app.listen(PORT, () => {
+  console.log(`listening on ${PORT}`);
 });
 
 app.get('/', (req, res) => {
