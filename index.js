@@ -1,15 +1,15 @@
+require('dotenv').config();
 import * as line from '@line/bot-sdk'
 import express from 'express'
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 // create LINE SDK config from env variables
 const config = {
-  channelSecret: "b6af05c16e146c4464736d13ffc81d3f",
+  channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN || "",
+  channelSecret: process.env.LINE_CHANNEL_SECRET || ""
 };
 
-// create LINE SDK client
-const client = line.LineBotClient.fromChannelAccessToken({
-  channelAccessToken: "e7/PSfogR8BY0uRLXMj4BQDK1eTNIC3dUnzdT9IdpTsRJn0wuFg46iN2/Ks0jdciuEfCxcYS5+/2u1HMkq4XvmkDaldmp9DrGUjd80YvtJ5zCpFaEG5ejzT9z9nbYd32HBcpvTm3A07nS+XijKVCcwdB04t89/1O/w1cDnyilFU=",
-});
 
 // create Express app
 // about Express itself: https://expressjs.com/
@@ -44,14 +44,15 @@ function handleEvent(event) {
   });
 }
 // listen on port
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3099;
 app.listen(port, () => {
   console.log(`listening on ${port}`);
 });
 
-app.get('/callback', function (req, res) {
-    res.send('Hello World!')
-})
+app.get('/', (req, res) => {
+  res.send('hello world, Thitiwath');
+});
+
 // Respond to POST request on the root route (/), the application’s home page:
 app.post('/callback', function (req, res) {
     res.send('Got a POST request')
